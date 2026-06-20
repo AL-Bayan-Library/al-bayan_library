@@ -378,20 +378,110 @@
             font-size: 16px;
         }
 
-        /* تجاوب الشاشات (Responsive) */
+        /* تجاوب الشاشات (Responsive) - التعديلات الجذرية للهاتف */
         @media (max-width: 768px) {
+            /* تصغير الترويسة */
+            .category-header {
+                padding: 20px 5%;
+                margin-bottom: 20px;
+            }
             .category-header h1 {
-                font-size: 28px;
+                font-size: 24px;
             }
+            .category-header p {
+                font-size: 14px;
+            }
+            .controls {
+                margin-bottom: 25px;
+            }
+            .search-box input {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            /* التعديل الجذري: كرتين في السطر وتصغير الحجم */
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 0 4% 50px;
             }
+
+            .product-image {
+                height: 130px;
+            }
+            
+            .product-info {
+                padding: 12px 8px;
+            }
+
+            .product-title {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .product-price {
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+
+            .add-to-cart-btn {
+                font-size: 11px;
+                padding: 6px;
+                gap: 5px;
+                border-width: 1.5px;
+            }
+            .add-to-cart-btn i {
+                font-size: 12px;
+            }
+
+            /* التعديل الجذري: نافذة السلة تظهر في 65% فقط من الشاشة بدلاً من إخفاء المنتجات بالكامل */
             .cart-drawer {
-                width: 100%;
-                left: -100%;
+                width: 65%;
+                left: -65%;
             }
             .cart-drawer.open {
                 left: 0;
+            }
+
+            /* تصغير محتويات السلة لتتناسب مع العرض الجديد */
+            .cart-drawer-header {
+                padding: 15px;
+            }
+            .cart-drawer-header h2 {
+                font-size: 16px;
+            }
+            .cart-item {
+                gap: 10px;
+            }
+            .cart-item img {
+                width: 50px;
+                height: 50px;
+            }
+            .cart-item-title {
+                font-size: 13px;
+            }
+            .cart-item-price {
+                font-size: 13px;
+            }
+            .cart-total-price {
+                font-size: 16px;
+            }
+            .checkout-btn {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+        
+        /* للهواتف الصغيرة جداً لضمان عدم تداخل النصوص */
+        @media (max-width: 380px) {
+            .product-image {
+                height: 110px;
+            }
+            .product-title {
+                font-size: 12px;
+            }
+            .add-to-cart-btn {
+                font-size: 10px;
             }
         }
     </style>

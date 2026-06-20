@@ -23,12 +23,78 @@
             --text-color: #333;
             --card-bg: #ffffff;
             --white: #ffffff;
+            --border-color: #eee;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 🌗 تخصيص الوضع الداكن الفاخر */
+        body.dark-theme {
+            --bg-color: #131c24;
+            --text-color: #f5f6fa;
+            --card-bg: #1e2b35;
+            --primary-color: #1a252f;
+            --white: #1e2b35;
+            --border-color: #2c3e50;
+        }
+
+        /* 🎬 1. الشاشة الترحيبية المتحركة (Splash Screen) */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+        .splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .splash-content {
+            text-align: center;
+            color: white;
+        }
+        .splash-logo {
+            font-size: 80px;
+            color: var(--secondary-color);
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        .splash-title {
+            font-size: 36px;
+            font-weight: 900;
+            margin-top: 20px;
+        }
+        .splash-loader {
+            width: 100px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            margin: 25px auto 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .splash-loader::after {
+            content: '';
+            position: absolute;
+            left: -50%;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            background: var(--secondary-color);
+            animation: loadingBar 1.5s infinite ease-in-out;
         }
 
         /* شريط التنقل (Navbar) المصغر */
@@ -43,6 +109,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: background-color 0.3s;
         }
 
         .logo {
@@ -57,12 +124,58 @@
             color: var(--secondary-color);
         }
 
+        /* حاوية التحكم العلوية بالأزرار التفاعلية */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* 🌐 زر الترجمة الفوري المطور والمضيء */
+        .lang-toggle {
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lang-toggle:hover {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+        }
+
+        /* زر الوضع الداكن الفخم */
+        .theme-toggle {
+            font-size: 22px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            color: var(--secondary-color);
+        }
+
         /* سلة المشتريات العائمة والتفاعلية */
         .cart-icon {
             position: relative;
             font-size: 24px;
             cursor: pointer;
+            color: white;
             transition: transform 0.2s;
+            display: flex;
+            align-items: center;
         }
         .cart-icon:hover {
             transform: scale(1.1);
@@ -93,6 +206,7 @@
             padding: 40px 5%;
             text-align: center;
             margin-bottom: 30px;
+            transition: background 0.3s;
         }
 
         .category-header h1 {
@@ -121,6 +235,14 @@
             border-radius: 30px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+        body.dark-theme .search-box {
+            background: var(--card-bg);
+        }
+        .search-box:focus-within {
+            border-color: var(--secondary-color);
         }
 
         .search-box input {
@@ -129,6 +251,8 @@
             border: none;
             outline: none;
             font-size: 16px;
+            background: transparent;
+            color: var(--text-color);
         }
 
         .search-box button {
@@ -159,7 +283,7 @@
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -203,6 +327,10 @@
             color: var(--primary-color);
             margin-bottom: 10px;
             line-height: 1.4;
+            transition: color 0.3s;
+        }
+        body.dark-theme .product-title {
+            color: var(--text-color);
         }
 
         .product-price {
@@ -227,11 +355,21 @@
             justify-content: center;
             gap: 10px;
         }
+        body.dark-theme .add-to-cart-btn {
+            color: #fff;
+            border-color: #fff;
+        }
 
         .product-card:hover .add-to-cart-btn {
             background-color: var(--primary-color);
             color: white;
+            border-color: var(--primary-color);
             transform: scale(1.03);
+        }
+        body.dark-theme .product-card:hover .add-to-cart-btn {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
         }
 
         /* نافذة السلة الجانبية المتطورة (Cart Drawer) */
@@ -248,8 +386,17 @@
             display: flex;
             flex-direction: column;
         }
+        html[dir="ltr"] .cart-drawer {
+            left: auto;
+            right: -400px;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        }
         .cart-drawer.open {
             left: 0;
+        }
+        html[dir="ltr"] .cart-drawer.open {
+            right: 0;
+            left: auto;
         }
         .cart-drawer-header {
             padding: 20px;
@@ -284,6 +431,7 @@
             margin-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
+        body.dark-theme .cart-item { border-bottom-color: #2c3e50; }
         .cart-item img {
             width: 60px;
             height: 60px;
@@ -299,6 +447,7 @@
             color: var(--primary-color);
             margin-bottom: 5px;
         }
+        body.dark-theme .cart-item-title { color: white; }
         .cart-item-price {
             color: var(--secondary-color);
             font-weight: bold;
@@ -320,6 +469,7 @@
             font-weight: bold;
             transition: background 0.2s;
         }
+        body.dark-theme .cart-item-ctrl button { background: #34495e; color: white; }
         .cart-item-ctrl button:hover {
             background: var(--secondary-color);
             color: white;
@@ -329,6 +479,7 @@
             background: #f9f9f9;
             border-top: 1px solid #eee;
         }
+        body.dark-theme .cart-drawer-footer { background: #1a252f; border-top-color: #34495e; }
         .cart-total-price {
             display: flex;
             justify-content: space-between;
@@ -337,6 +488,7 @@
             margin-bottom: 15px;
             color: var(--primary-color);
         }
+        body.dark-theme .cart-total-price { color: white; }
         .checkout-btn {
             width: 100%;
             padding: 12px;
@@ -378,57 +530,242 @@
             font-size: 16px;
         }
 
-        /* تجاوب الشاشات (Responsive) */
+        /* 🚀 3. زر الصعود السريع للأعلى المتطور (Scroll to Top) */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+        html[dir="ltr"] .scroll-top {
+            right: auto;
+            left: 30px;
+        }
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .scroll-top:hover {
+            background-color: #c0392b;
+            transform: translateY(-5px);
+        }
+
+        /* الحركات البصرية والأنيميشن */
+        @keyframes pulseGlow {
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(231, 76, 60, 0.4)); }
+            100% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(231, 76, 60, 0.8)); }
+        }
+        @keyframes loadingBar {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+
+        /* تجاوب الشاشات (Responsive) - التعديلات الجذرية للهاتف */
         @media (max-width: 768px) {
+            /* تعديل الهيدر والأزرار العلوية */
+            header {
+                padding: 10px 4%;
+            }
+            .logo {
+                font-size: 18px;
+            }
+            .lang-toggle {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+            .theme-toggle, .cart-icon {
+                font-size: 20px;
+            }
+            .header-controls {
+                gap: 12px;
+            }
+
+            /* تصغير الترويسة */
+            .category-header {
+                padding: 20px 5%;
+                margin-bottom: 20px;
+            }
             .category-header h1 {
-                font-size: 28px;
+                font-size: 24px;
             }
+            .category-header p {
+                font-size: 14px;
+            }
+            .controls {
+                margin-bottom: 25px;
+            }
+            .search-box input {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            /* التعديل الجذري: كرتين في السطر وتصغير الحجم */
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 0 4% 50px;
             }
+
+            .product-image {
+                height: 130px;
+            }
+            
+            .product-info {
+                padding: 12px 8px;
+            }
+
+            .product-title {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .product-price {
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+
+            .add-to-cart-btn {
+                font-size: 11px;
+                padding: 6px;
+                gap: 5px;
+                border-width: 1.5px;
+            }
+            .add-to-cart-btn i {
+                font-size: 12px;
+            }
+
+            /* التعديل الجذري: نافذة السلة تظهر في 65% فقط من الشاشة */
             .cart-drawer {
-                width: 100%;
-                left: -100%;
+                width: 65%;
+                left: -65%;
+            }
+            html[dir="ltr"] .cart-drawer {
+                right: -65%;
+                left: auto;
             }
             .cart-drawer.open {
                 left: 0;
+            }
+            html[dir="ltr"] .cart-drawer.open {
+                right: 0;
+                left: auto;
+            }
+
+            /* تصغير محتويات السلة */
+            .cart-drawer-header {
+                padding: 15px;
+            }
+            .cart-drawer-header h2 {
+                font-size: 16px;
+            }
+            .cart-item {
+                gap: 10px;
+            }
+            .cart-item img {
+                width: 50px;
+                height: 50px;
+            }
+            .cart-item-title {
+                font-size: 13px;
+            }
+            .cart-item-price {
+                font-size: 13px;
+            }
+            .cart-total-price {
+                font-size: 16px;
+            }
+            .checkout-btn {
+                font-size: 13px;
+                padding: 10px;
+            }
+        }
+
+        /* للهواتف الصغيرة جداً لضمان عدم تداخل النصوص */
+        @media (max-width: 380px) {
+            .product-image {
+                height: 110px;
+            }
+            .product-title {
+                font-size: 11px;
+            }
+            .add-to-cart-btn {
+                font-size: 10px;
             }
         }
     </style>
 </head>
 <body>
 
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+            <i class="fa-solid fa-book-open-reader splash-logo"></i>
+            <h1 class="splash-title" id="splashTitle">مكتبة البيان</h1>
+            <div class="splash-loader"></div>
+        </div>
+    </div>
+
     <header>
-        <a href="index.html" class="logo"><i class="fa-solid fa-book-open-reader"></i> مكتبة البيان</a>
+        <a href="index.html" class="logo" id="headerLogo"><i class="fa-solid fa-book-open-reader"></i> مكتبة البيان</a>
         
-        <div class="cart-icon" id="cartToggleBtn">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span class="cart-count" id="cartCount">0</span>
+        <div class="header-controls">
+            <div class="lang-toggle" id="langToggleBtn" title="تغيير اللغة / Switch Language">
+                <i class="fa-solid fa-language"></i>
+                <span id="langText">English</span>
+            </div>
+
+            <div class="theme-toggle" id="themeToggleBtn" title="تبديل مظهر الموقع">
+                <i class="fa-solid fa-moon"></i>
+            </div>
+            
+            <div class="cart-icon" id="cartToggleBtn">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
         </div>
     </header>
 
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-drawer" id="cartDrawer">
         <div class="cart-drawer-header">
-            <h2>سلة المشتريات</h2>
+            <h2 id="cartDrawerTitle">سلة المشتريات</h2>
             <i class="fa-solid fa-xmark close-cart" id="closeCartBtn"></i>
         </div>
         <div class="cart-drawer-items" id="cartDrawerItems">
             </div>
         <div class="cart-drawer-footer">
             <div class="cart-total-price">
-                <span>الإجمالي:</span>
+                <span id="cartTotalLabel">الإجمالي:</span>
                 <span id="cartTotalAmount">0 ج.س</span>
             </div>
             <button class="checkout-btn" onclick="sendOrderViaWhatsApp()">
-                <i class="fa-brands fa-whatsapp"></i> تأكيد الطلب عبر الواتساب
+                <i class="fa-brands fa-whatsapp"></i> <span id="checkoutBtnText">تأكيد الطلب عبر الواتساب</span>
             </button>
         </div>
     </div>
 
+    <div class="scroll-top" id="scrollTopBtn" title="الصعود للأعلى">
+        <i class="fa-solid fa-arrow-up"></i>
+    </div>
+
     <section class="category-header">
-        <h1>قسم الأدوات المكتبية</h1>
-        <p>تجهيزات متكاملة للمكاتب والشركات بأعلى جودة.</p>
+        <h1 id="catHeaderTitle">قسم الأدوات المكتبية</h1>
+        <p id="catHeaderDesc">تجهيزات متكاملة للمكاتب والشركات بأعلى جودة.</p>
     </section>
 
     <div class="controls">
@@ -442,33 +779,71 @@
 
     <script>
         // ==========================================================
-        // 📦 قاعدة بيانات منتجات قسم الأدوات المكتبية المدمجة محلياً
+        // 📦 المخزن المركزي لمنتجات قسم الأدوات المكتبية (يدعم اللغتين)
         // ==========================================================
         const officeProductsDatabase = [
             {
-                "name": "منظم مكتب خشبي فاخر",
+                "nameAr": "منظم مكتب خشبي فاخر",
+                "nameEn": "Luxury Wooden Desk Organizer",
                 "price": 8500,
                 "img": "https://images.unsplash.com/photo-1513151233558-d860c5398176?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
             },
             {
-                "name": "خرامة ورق ثنائية الثقب",
+                "nameAr": "خرامة ورق ثنائية الثقب",
+                "nameEn": "Two-Hole Paper Puncher",
                 "price": 3800,
                 "img": "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
             },
             {
-                "name": "دباسة أوراق مكتبية معدنية",
+                "nameAr": "دباسة أوراق مكتبية معدنية",
+                "nameEn": "Metal Office Paper Stapler",
                 "price": 4500,
                 "img": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
             },
             {
-                "name": "حافظة ملفات بوكس بلاستيك",
+                "nameAr": "حافظة ملفات بوكس بلاستيك",
+                "nameEn": "Plastic Box File Folder",
                 "price": 2900,
                 "img": "https://images.unsplash.com/photo-1595844730298-b960ff98fee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
             }
         ];
 
-        // نظام سلة المشتريات المتقدم والمحفوظ برمجياً
+        // 🌐 قاموس الكلمات والترجمات لواجهة الشاشة
+        const localizationDict = {
+            "ar": {
+                "splashTitle": "مكتبة البيان",
+                "headerLogo": "<i class='fa-solid fa-book-open-reader'></i> مكتبة البيان",
+                "langText": "English",
+                "cartDrawerTitle": "سلة المشتريات",
+                "cartTotalLabel": "الإجمالي:",
+                "checkoutBtnText": "تأكيد الطلب عبر الواتساب",
+                "catHeaderTitle": "قسم الأدوات المكتبية",
+                "catHeaderDesc": "تجهيزات متكاملة للمكاتب والشركات بأعلى جودة.",
+                "searchPlaceholder": "ابحث عن منتج مكتبة (مثال: خرامة، منظم ملفات)...",
+                "addToCartBtn": "<i class='fa-solid fa-cart-plus'></i> أضف للسلة",
+                "emptyCartMsg": "سلة المشتريات فارغة حالياً.",
+                "currency": "ج.س"
+            },
+            "en": {
+                "splashTitle": "Al-Bayan Library",
+                "headerLogo": "<i class='fa-solid fa-book-open-reader'></i> Al-Bayan Library",
+                "langText": "العربية",
+                "cartDrawerTitle": "Shopping Cart",
+                "cartTotalLabel": "Total:",
+                "checkoutBtnText": "Confirm Order via WhatsApp",
+                "catHeaderTitle": "Office Supplies Section",
+                "catHeaderDesc": "Complete high-quality supplies for offices and companies.",
+                "searchPlaceholder": "Search for an office product (e.g., hole punch, file folder)...",
+                "addToCartBtn": "<i class='fa-solid fa-cart-plus'></i> Add to Cart",
+                "emptyCartMsg": "Your shopping cart is currently empty.",
+                "currency": "SDG"
+            }
+        };
+
+        // إدارة الحالة العامة للسلة، المظهر، واللغة
         let cart = JSON.parse(localStorage.getItem('albayan_cart')) || [];
+        let currentLang = localStorage.getItem('albayan_lang') || 'ar';
+        
         const cartCountElement = document.getElementById('cartCount');
         const cartDrawer = document.getElementById('cartDrawer');
         const cartOverlay = document.getElementById('cartOverlay');
@@ -477,6 +852,108 @@
         const cartDrawerItems = document.getElementById('cartDrawerItems');
         const cartTotalAmount = document.getElementById('cartTotalAmount');
 
+        // 🎬 1. إخفاء الشاشة الترحيبية
+        setTimeout(() => {
+            document.getElementById('splashScreen').classList.add('fade-out');
+        }, 2000);
+
+        // 🌗 2. الوضع الداكن
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        
+        if (localStorage.getItem('albayan_theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('albayan_theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('albayan_theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // 🚀 3. الصعود السريع
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 🌐 4. الترجمة الفورية
+        const langToggleBtn = document.getElementById('langToggleBtn');
+        
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('albayan_lang', lang);
+            
+            if (lang === 'en') {
+                document.documentElement.dir = 'ltr';
+                document.documentElement.lang = 'en';
+            } else {
+                document.documentElement.dir = 'rtl';
+                document.documentElement.lang = 'ar';
+            }
+
+            const dict = localizationDict[lang];
+            document.getElementById('splashTitle').innerText = dict.splashTitle;
+            document.getElementById('headerLogo').innerHTML = dict.headerLogo;
+            document.getElementById('langText').innerText = dict.langText;
+            document.getElementById('cartDrawerTitle').innerText = dict.cartDrawerTitle;
+            document.getElementById('cartTotalLabel').innerText = dict.cartTotalLabel;
+            document.getElementById('checkoutBtnText').innerText = dict.checkoutBtnText;
+            document.getElementById('catHeaderTitle').innerText = dict.catHeaderTitle;
+            document.getElementById('catHeaderDesc').innerText = dict.catHeaderDesc;
+            document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
+
+            loadProducts();
+            updateCartUI();
+        }
+
+        langToggleBtn.addEventListener('click', () => {
+            let targetLang = currentLang === 'ar' ? 'en' : 'ar';
+            applyLanguage(targetLang);
+        });
+
+        // توليد المنتجات
+        function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = ''; 
+            const dict = localizationDict[currentLang];
+
+            officeProductsDatabase.forEach(product => {
+                const productName = currentLang === 'ar' ? product.nameAr : product.nameEn;
+                grid.innerHTML += `
+                    <div class="product-card" data-name="${productName}">
+                        <div class="product-image">
+                            <img src="${product.img}" alt="${productName}">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${productName}</h3>
+                            <div class="product-price">${product.price.toLocaleString()} ${dict.currency}</div>
+                            <button class="add-to-cart-btn" onclick="addToCart('${product.nameAr}', '${product.nameEn}', ${product.price}, '${product.img}')">
+                                ${dict.addToCartBtn}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // تحديث السلة
         function updateCartUI() {
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
             cartCountElement.innerText = totalItems;
@@ -485,21 +962,24 @@
             setTimeout(() => cartCountElement.classList.remove('bump'), 300);
 
             cartDrawerItems.innerHTML = '';
+            const dict = localizationDict[currentLang];
+
             if(cart.length === 0) {
-                cartDrawerItems.innerHTML = '<div class="empty-cart-msg">سلة المشتريات فارغة حالياً.</div>';
-                cartTotalAmount.innerText = '0 ج.س';
+                cartDrawerItems.innerHTML = `<div class="empty-cart-msg">${dict.emptyCartMsg}</div>`;
+                cartTotalAmount.innerText = `0 ${dict.currency}`;
                 return;
             }
 
             let totalMoney = 0;
             cart.forEach((item, index) => {
                 totalMoney += item.price * item.qty;
+                const itemName = currentLang === 'ar' ? (item.nameAr || item.name) : (item.nameEn || item.name);
                 cartDrawerItems.innerHTML += `
                     <div class="cart-item">
-                        <img src="${item.img}" alt="${item.name}">
+                        <img src="${item.img}" alt="${itemName}">
                         <div class="cart-item-details">
-                            <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-price">${(item.price * item.qty).toLocaleString()} ج.س</div>
+                            <div class="cart-item-title">${itemName}</div>
+                            <div class="cart-item-price">${(item.price * item.qty).toLocaleString()} ${dict.currency}</div>
                             <div class="cart-item-ctrl">
                                 <button onclick="changeQty(${index}, -1)">-</button>
                                 <span>${item.qty}</span>
@@ -510,15 +990,17 @@
                     </div>
                 `;
             });
-            cartTotalAmount.innerText = totalMoney.toLocaleString() + ' ج.س';
+            cartTotalAmount.innerText = `${totalMoney.toLocaleString()} ${dict.currency}`;
         }
 
-        function addToCart(name, price, img) {
-            let existingItem = cart.find(item => item.name === name);
+        // الحل الجذري لمشكلة الـ undefined في الفاتورة الخاصة بالواتساب
+        function addToCart(nameAr, nameEn, price, img) {
+            let existingItem = cart.find(item => item.nameAr === nameAr || item.name === nameAr);
             if(existingItem) {
                 existingItem.qty += 1;
             } else {
-                cart.push({ name, price, img, qty: 1 });
+                // المتغير name تمت إضافته خصيصاً ليتوافق مع فاتورة cart.html
+                cart.push({ name: nameAr, nameAr: nameAr, nameEn: nameEn, price: price, img: img, qty: 1 });
             }
             localStorage.setItem('albayan_cart', JSON.stringify(cart));
             updateCartUI();
@@ -549,30 +1031,7 @@
             cartOverlay.classList.remove('show');
         });
 
-        // دالة عرض وتوليد المنتجات تلقائياً من مصفوفة المكتبة
-        function loadProducts() {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = ''; 
-
-            officeProductsDatabase.forEach(product => {
-                grid.innerHTML += `
-                    <div class="product-card" data-name="${product.name}">
-                        <div class="product-image">
-                            <img src="${product.img}" alt="${product.name}">
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">${product.name}</h3>
-                            <div class="product-price">${product.price.toLocaleString()} ج.س</div>
-                            <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price}, '${product.img}')">
-                                <i class="fa-solid fa-cart-plus"></i> أضف للسلة
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // نظام البحث الذكي
+        // البحث الذكي
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keyup', function(e) {
             const searchTerm = e.target.value.toLowerCase();
@@ -590,15 +1049,14 @@
 
         function sendOrderViaWhatsApp() {
             if(cart.length === 0) {
-                alert('السلة فارغة، أضف بعض المنتجات أولاً!');
+                alert(currentLang === 'ar' ? 'السلة فارغة، أضف بعض المنتجات أولاً!' : 'The cart is empty, add some products first!');
                 return;
             }
             window.location.href = 'cart.html';
         }
 
         window.onload = function() {
-            updateCartUI();
-            loadProducts(); // عرض منتجات المكتبة فوراً
+            applyLanguage(currentLang);
         };
     </script>
 </body>
