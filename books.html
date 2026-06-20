@@ -972,7 +972,8 @@
             let totalMoney = 0;
             cart.forEach((item, index) => {
                 totalMoney += item.price * item.qty;
-                const itemName = currentLang === 'ar' ? item.nameAr : item.nameEn;
+                // تم التعديل هنا لقراءة الاسم بشكل صحيح دائماً
+                const itemName = currentLang === 'ar' ? (item.nameAr || item.name) : (item.nameEn || item.name);
                 cartDrawerItems.innerHTML += `
                     <div class="cart-item">
                         <img src="${item.img}" alt="${itemName}">
@@ -992,12 +993,13 @@
             cartTotalAmount.innerText = `${totalMoney.toLocaleString()} ${dict.currency}`;
         }
 
+        // تم التعديل هنا ليتوافق مع فاتورة cart.html والواتساب (إضافة المتغير name)
         function addToCart(nameAr, nameEn, price, img) {
-            let existingItem = cart.find(item => item.nameAr === nameAr);
+            let existingItem = cart.find(item => item.nameAr === nameAr || item.name === nameAr);
             if(existingItem) {
                 existingItem.qty += 1;
             } else {
-                cart.push({ nameAr, nameEn, price, img, qty: 1 });
+                cart.push({ name: nameAr, nameAr: nameAr, nameEn: nameEn, price: price, img: img, qty: 1 });
             }
             localStorage.setItem('albayan_cart', JSON.stringify(cart));
             updateCartUI();

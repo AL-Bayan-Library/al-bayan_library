@@ -657,7 +657,6 @@
             }
             html[dir="ltr"] .cart-drawer {
                 right: -65%;
-                left: auto;
             }
             .cart-drawer.open {
                 left: 0;
@@ -928,7 +927,7 @@
             applyLanguage(targetLang);
         });
 
-        // توليد المنتجات ديناميكياً
+        // توليد المنتجات
         function loadProducts() {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = ''; 
@@ -953,7 +952,7 @@
             });
         }
 
-        // تحديث السلة التفاعلية
+        // تحديث السلة
         function updateCartUI() {
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
             cartCountElement.innerText = totalItems;
@@ -993,12 +992,13 @@
             cartTotalAmount.innerText = `${totalMoney.toLocaleString()} ${dict.currency}`;
         }
 
+        // تم التعديل هنا ليتوافق مع فاتورة cart.html والواتساب (إضافة المتغير name)
         function addToCart(nameAr, nameEn, price, img) {
             let existingItem = cart.find(item => item.nameAr === nameAr || item.name === nameAr);
             if(existingItem) {
                 existingItem.qty += 1;
             } else {
-                cart.push({ nameAr, nameEn, price, img, qty: 1 });
+                cart.push({ name: nameAr, nameAr: nameAr, nameEn: nameEn, price: price, img: img, qty: 1 });
             }
             localStorage.setItem('albayan_cart', JSON.stringify(cart));
             updateCartUI();
@@ -1016,7 +1016,6 @@
             updateCartUI();
         }
 
-        // فتح وإغلاق السلة
         cartToggleBtn.addEventListener('click', () => {
             cartDrawer.classList.add('open');
             cartOverlay.classList.add('show');
@@ -1030,7 +1029,7 @@
             cartOverlay.classList.remove('show');
         });
 
-        // البحث الديناميكي
+        // البحث الذكي
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('keyup', function(e) {
             const searchTerm = e.target.value.toLowerCase();
