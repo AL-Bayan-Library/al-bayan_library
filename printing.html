@@ -719,7 +719,6 @@
 
         /* تجاوب الشاشات (Responsive) - التعديلات الجذرية للهاتف */
         @media (max-width: 768px) {
-            /* تعديل الهيدر والأزرار العلوية */
             header {
                 padding: 10px 4%;
             }
@@ -737,7 +736,6 @@
                 gap: 12px;
             }
 
-            /* تصغير الترويسة */
             .category-header {
                 padding: 20px 5%;
                 margin-bottom: 20px;
@@ -756,7 +754,6 @@
                 font-size: 14px;
             }
 
-            /* التعديل الجذري: كرتين في السطر وتصغير الحجم */
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
@@ -791,7 +788,6 @@
                 font-size: 12px;
             }
 
-            /* التعديل الجذري: نافذة السلة تظهر في 65% فقط من الشاشة */
             .cart-drawer {
                 width: 65%;
                 left: -65%;
@@ -808,7 +804,6 @@
                 left: auto;
             }
 
-            /* تصغير محتويات السلة */
             .cart-drawer-header {
                 padding: 15px;
             }
@@ -842,7 +837,6 @@
             .footer-dev { font-size: 13px; }
         }
         
-        /* للهواتف الصغيرة جداً لضمان عدم تداخل النصوص */
         @media (max-width: 380px) {
             .product-image {
                 height: 110px;
@@ -1032,7 +1026,23 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDn3EPBVKjQEX_ZRPiKxW1ZmVN80PKXUSI",
+            authDomain: "albayan-library.firebaseapp.com",
+            projectId: "albayan-library",
+            storageBucket: "albayan-library.firebasestorage.app",
+            messagingSenderId: "318412584830",
+            appId: "1:318412584830:web:45d6fca35a00040fd5252f",
+            measurementId: "G-4P3SHQ9ZZ3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // 🌐 قاموس الترجمة الشامل للواجهة
         const localizationDict = {
             "ar": {
@@ -1084,10 +1094,9 @@
         let currentLang = localStorage.getItem('albayan_lang') || 'ar';
         let cart = JSON.parse(localStorage.getItem('albayan_cart')) || [];
 
-        // 🌐 تفعيل الترجمة الفورية
         const langToggleBtn = document.getElementById('langToggleBtn');
 
-        function applyLanguage(lang) {
+        window.applyLanguage = function(lang) {
             currentLang = lang;
             localStorage.setItem('albayan_lang', lang);
             
@@ -1117,7 +1126,6 @@
             document.getElementById('txtCall').innerText = dict.txtCall;
             document.getElementById('txtEmail').innerText = dict.txtEmail;
 
-            // ترجمة الزر العائم
             document.querySelector('.fm-txt1').innerText = dict.fmTxt1;
             document.querySelector('.fm-txt2').innerText = dict.fmTxt2;
             document.querySelector('.fm-txt3').innerText = dict.fmTxt3;
@@ -1129,25 +1137,22 @@
             document.querySelector('.fm-txt9').innerText = dict.fmTxt9;
             document.querySelector('.fm-txt10').innerText = dict.fmTxt10;
 
-            // تحديث نصوص أزرار الإضافة للسلة
             document.querySelectorAll('.add-btn-txt').forEach(span => {
                 span.innerText = dict.addToCartBtn;
             });
 
-            updateCartUI(); // تحديث السلة والعملة
+            updateCartUI(); 
         }
 
         langToggleBtn.addEventListener('click', () => {
             let targetLang = currentLang === 'ar' ? 'en' : 'ar';
-            applyLanguage(targetLang);
+            window.applyLanguage(targetLang);
         });
 
-        // 🎬 إخفاء الشاشة الترحيبية
         setTimeout(() => {
             document.getElementById('splashScreen').classList.add('fade-out');
         }, 2000);
 
-        // 🌗 تفعيل الوضع الداكن الفاخر
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const themeIcon = themeToggleBtn.querySelector('i');
         
@@ -1170,7 +1175,6 @@
             }
         });
 
-        // 🚀 زر الصعود للأعلى
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
@@ -1183,7 +1187,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // 🧭 تفعيل الزر العائم للأقسام
         const floatingMainBtn = document.getElementById('floatingMainBtn');
         const floatingMenuContainer = document.getElementById('floatingMenuContainer');
 
@@ -1191,14 +1194,12 @@
             floatingMenuContainer.classList.toggle('active');
         });
 
-        // إغلاق القائمة العائمة عند النقر خارجها
         document.addEventListener('click', (e) => {
             if (!floatingMenuContainer.contains(e.target) && floatingMenuContainer.classList.contains('active')) {
                 floatingMenuContainer.classList.remove('active');
             }
         });
 
-        // 💻 تفعيل شاشة المطور المنبثقة
         const openDevModalBtn = document.getElementById('openDevModalBtn');
         const devModalOverlay = document.getElementById('devModalOverlay');
         const closeDevModalBtn = document.getElementById('closeDevModalBtn');
@@ -1215,7 +1216,6 @@
             }
         });
 
-        // ربط نظام سلة المشتريات المشترك عبر الـ LocalStorage
         const cartCountElement = document.getElementById('cartCount');
         const cartDrawer = document.getElementById('cartDrawer');
         const cartOverlay = document.getElementById('cartOverlay');
@@ -1243,7 +1243,6 @@
             let totalMoney = 0;
             cart.forEach((item, index) => {
                 totalMoney += item.price * item.qty;
-                // ضمان قراءة الاسم بشكل سليم في كل الشاشات
                 const itemName = currentLang === 'ar' ? (item.nameAr || item.name) : (item.nameEn || item.name);
                 cartDrawerItems.innerHTML += `
                     <div class="cart-item">
@@ -1264,9 +1263,7 @@
             document.getElementById('cartTotalAmount').innerText = `${totalMoney.toLocaleString()} ${dict.currency}`;
         }
 
-        // دالة إضافة منتج مخصص للسلة (مع التوافقية للأسماء الإنجليزية والعربية)
-        function addToCart(nameAr, price, img, nameEn = "") {
-            // نمرر الاسم الانجليزي كنفس الاسم العربي مؤقتاً إذا لم يتم توفيره
+        window.addToCart = function(nameAr, price, img, nameEn = "") {
             if(nameEn === "") nameEn = nameAr;
             
             let existingItem = cart.find(item => item.name === nameAr || item.nameAr === nameAr);
@@ -1278,12 +1275,11 @@
             localStorage.setItem('albayan_cart', JSON.stringify(cart));
             updateCartUI();
             
-            // فتح السلة تلقائياً ليرى العميل المنتج وهو يضاف
             cartDrawer.classList.add('open');
             cartOverlay.classList.add('show');
         }
 
-        function changeQty(index, amount) {
+        window.changeQty = function(index, amount) {
             cart[index].qty += amount;
             if(cart[index].qty <= 0) {
                 cart.splice(index, 1);
@@ -1292,7 +1288,6 @@
             updateCartUI();
         }
 
-        // التحكم بفتح وغلق السلة
         cartToggleBtn.addEventListener('click', () => {
             cartDrawer.classList.add('open');
             cartOverlay.classList.add('show');
@@ -1306,35 +1301,77 @@
             cartOverlay.classList.remove('show');
         });
 
-        // فلترة المنتجات (البحث)
-        const searchInput = document.getElementById('searchInput');
-        const productCards = document.querySelectorAll('.product-card');
-
-        searchInput.addEventListener('keyup', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            productCards.forEach(card => {
-                const productName = card.getAttribute('data-name').toLowerCase();
-                if (productName.includes(searchTerm)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-
-        function sendOrderViaWhatsApp() {
+        window.sendOrderViaWhatsApp = function() {
             if(cart.length === 0) {
                 alert(currentLang === 'ar' ? 'السلة فارغة، أضف بعض المنتجات أولاً!' : 'Cart is empty, add some products first!');
                 return;
             }
-            // الانتقال المباشر لصفحة الفاتورة والشحن الجديدة طوالي
             window.location.href = 'cart.html';
         }
 
-        // الإقلاع الأولي
+        // -------------------------------------------------------------------------
+        // 🔥 الكود السحري لجلب المنتجات من الفايربيس (قسم الطباعة والتصوير والتغليف) طوالي وعرضها بربط لحظي 🔥
+        // -------------------------------------------------------------------------
+        const productsGrid = document.getElementById('productsGrid');
+        const originalHardcodedProducts = productsGrid.innerHTML;
+
+        // نقوم بإنشاء استعلام يجلب المنتجات التابعة لـ (قسم الطباعة والتصوير والتغليف) فقط
+        const q = query(collection(db, "Products"), where("category", "==", "قسم الطباعة والتصوير والتغليف"));
+
+        onSnapshot(q, (snapshot) => {
+            // إعادة المنتجات الثابتة القديمة أولاً لضمان عدم حذف أي حرف منها
+            productsGrid.innerHTML = originalHardcodedProducts;
+
+            snapshot.forEach((doc) => {
+                const product = doc.data();
+                const nameToDisplay = currentLang === 'ar' ? (product.nameAr || product.name) : (product.nameEn || product.name);
+
+                // بناء الهيكل المتوافق مع التصميم تماماً
+                const cardHTML = `
+                    <div class="product-card" data-name="${nameToDisplay}">
+                        <div class="product-image">
+                            <img src="${product.img}" alt="${nameToDisplay}" onerror="this.src='https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=500'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${nameToDisplay}</h3>
+                            <div class="product-price">${Number(product.price).toLocaleString()} ج.س</div>
+                            <button class="add-to-cart-btn" onclick="addToCart('${product.nameAr || product.name}', ${product.price}, '${product.img}', '${product.nameEn || ""}')">
+                                <i class="fa-solid fa-cart-plus"></i> <span class="add-btn-txt">${localizationDict[currentLang].addToCartBtn}</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                // الإضافة الفورية بجانب المنتجات الموجودة مسبقاً
+                productsGrid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            // إعادة تشغيل دالة البحث الفوري لتشمل المنتجات القادمة من قاعدة البيانات
+            attachSearchEvent();
+        });
+
+        // دالة تصفية البحث الذكية للمنتجات الثابتة والديناميكية معاً
+        function attachSearchEvent() {
+            const searchInput = document.getElementById('searchInput');
+            const newSearchInput = searchInput.cloneNode(true);
+            searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+            newSearchInput.addEventListener('keyup', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const currentCards = document.querySelectorAll('.product-card');
+                
+                currentCards.forEach(card => {
+                    const productName = card.getAttribute('data-name').toLowerCase();
+                    if (productName.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
         window.onload = function() {
-            applyLanguage(currentLang);
+            window.applyLanguage(currentLang);
         };
     </script>
 </body>

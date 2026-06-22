@@ -875,7 +875,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // 🌐 معالجة تطبيق اللغة والترجمة للواجهات
+        // 🌐 معالجة تطبيق اللغة والترجمة للواجهات وإسقاط النطاق إلى window لضمان التوافقية
         window.applyLanguage = function(lang) {
             currentLang = lang;
             localStorage.setItem('albayan_lang', lang);
@@ -899,13 +899,13 @@
             document.getElementById('catHeaderDesc').innerText = dict.catHeaderDesc;
             document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
 
-            renderProducts();
-            updateCartUI();
+            window.renderProducts();
+            window.updateCartUI();
         }
 
         langToggleBtn.addEventListener('click', () => {
             let targetLang = currentLang === 'ar' ? 'en' : 'ar';
-            applyLanguage(targetLang);
+            window.applyLanguage(targetLang);
         });
 
         // 📥 الاتصال بـ Cloud Firestore وجلب منتجات "قسم الكتب والمذكرات" فقط حياً وبشكل تلقائي
@@ -916,11 +916,11 @@
             snapshot.forEach((doc) => {
                 booksProductsDatabase.push(doc.data());
             });
-            renderProducts(); // تحديث رسم المنتجات على الشاشة فور حدوث تغيير
+            window.renderProducts(); // تحديث رسم المنتجات على الشاشة فور حدوث تغيير
         });
 
         // دالة توليد ورسم كروت المنتجات من Firestore
-        function renderProducts() {
+        window.renderProducts = function() {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = ''; 
             const dict = localizationDictionary[currentLang];
@@ -989,6 +989,8 @@
         }
 
         window.addToCart = function(nameAr, nameEn, price, img) {
+            if(!nameEn || nameEn === "") nameEn = nameAr;
+            
             let existingItem = cart.find(item => item.nameAr === nameAr || item.name === nameAr);
             if(existingItem) {
                 existingItem.qty += 1;
@@ -996,7 +998,7 @@
                 cart.push({ name: nameAr, nameAr: nameAr, nameEn: nameEn, price: price, img: img, qty: 1 });
             }
             localStorage.setItem('albayan_cart', JSON.stringify(cart));
-            updateCartUI();
+            window.updateCartUI();
             cartDrawer.classList.add('open');
             cartOverlay.classList.add('show');
         }
@@ -1007,7 +1009,7 @@
                 cart.splice(index, 1);
             }
             localStorage.setItem('albayan_cart', JSON.stringify(cart));
-            updateCartUI();
+            window.updateCartUI();
         }
 
         cartToggleBtn.addEventListener('click', () => {
@@ -1048,7 +1050,7 @@
 
         // تهيئة الإعدادات الأساسية عند تحميل الصفحة بالكامل
         window.addEventListener('DOMContentLoaded', () => {
-            applyLanguage(currentLang);
+            window.applyLanguage(currentLang);
         });
     </script>
 </body>

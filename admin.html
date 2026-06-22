@@ -431,6 +431,86 @@
             0% { left: -50%; }
             100% { left: 100%; }
         }
+
+        /* =========================================================
+           🚀 الحل الجذري للتجاوب مع الهواتف (بدون حذف أي كود) 🚀 
+           ========================================================= */
+        @media (max-width: 768px) {
+            /* 1. إصلاح الهيدر لترتيب النصوص وعدم تداخلها */
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 4%;
+                text-align: center;
+            }
+            .logo {
+                font-size: 17px;
+                justify-content: center;
+                flex-wrap: wrap;
+                line-height: 1.4;
+            }
+            .header-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+            }
+            .lang-toggle, .logout-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            /* 2. إصلاح صندوق الإدخال وإلغاء التثبيت الذي يخفي المنتجات */
+            .admin-dashboard {
+                margin: 15px auto;
+                padding: 0 3%;
+            }
+            .form-card {
+                position: relative; /* إزالة الـ Sticky لحل المشكلة */
+                top: 0;
+                padding: 20px 15px;
+            }
+            
+            /* 3. إصلاح قائمة المنتجات في الأسفل لتتناسب مع شاشة الهاتف */
+            .products-management {
+                padding: 20px 15px;
+            }
+            .products-management h3 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .filter-select {
+                width: 100%; /* جعل الفلتر بعرض الشاشة */
+            }
+            .admin-product-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 12px;
+            }
+            .admin-product-details {
+                width: 100%;
+            }
+            .admin-product-name {
+                font-size: 14px;
+            }
+            .admin-actions {
+                width: 100%;
+                justify-content: center;
+                margin-top: 5px;
+            }
+
+            /* 4. تعديل شاشة تسجيل الدخول للهواتف */
+            .login-container {
+                width: 90%;
+                padding: 30px 20px;
+                margin: 40px auto;
+            }
+            .login-container h2 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -635,7 +715,7 @@
             }
         });
 
-        function applyLanguage(lang) {
+        window.applyLanguage = function(lang) {
             currentLang = lang;
             localStorage.setItem('albayan_lang', lang);
             document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
@@ -662,11 +742,13 @@
             
             document.getElementById('filterCategory').options[0].text = dict.allCats;
 
-            loadAdminProducts();
+            if(typeof window.loadAdminProducts === 'function') {
+                window.loadAdminProducts();
+            }
         }
 
         document.getElementById('langToggleBtn').addEventListener('click', () => {
-            applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+            window.applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
         });
 
         window.loginAdmin = function() {
@@ -703,7 +785,9 @@
             snapshot.forEach((doc) => {
                 globalProductsArray.push({ key: doc.id, ...doc.data() });
             });
-            loadAdminProducts();
+            if(typeof window.loadAdminProducts === 'function') {
+                window.loadAdminProducts();
+            }
         });
 
         window.loadAdminProducts = function() {
@@ -752,7 +836,7 @@
             const img = document.getElementById('prodImg').value.trim();
 
             const productData = {
-                name: nameAr,
+                name: nameAr, // للحفاظ على التوافق القديم
                 nameAr: nameAr,
                 nameEn: nameEn,
                 price: price,
@@ -765,7 +849,7 @@
                     const docRef = doc(db, 'Products', currentEditKey);
                     await updateDoc(docRef, productData);
                     alert(currentLang === 'ar' ? "تم تحديث بيانات المنتج بنجاح!" : "Product updated successfully!");
-                    resetForm();
+                    window.resetForm();
                 } catch(err) {
                     alert("Error: " + err.message);
                 }
@@ -810,7 +894,7 @@
                     const docRef = doc(db, 'Products', key);
                     await deleteDoc(docRef);
                     alert(currentLang === 'ar' ? "تم حذف المنتج بنجاح من قاعدة البيانات!" : "Product deleted successfully from database!");
-                    if (editMode && currentEditKey === key) resetForm();
+                    if (editMode && currentEditKey === key) window.resetForm();
                 } catch(err) {
                     alert("Error: " + err.message);
                 }
@@ -831,7 +915,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             checkSession();
-            applyLanguage(currentLang);
+            window.applyLanguage(currentLang);
         });
     </script>
 </body>

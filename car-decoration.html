@@ -578,7 +578,6 @@
 
         /* تجاوب الشاشات (Responsive) - التعديلات الجذرية للهاتف */
         @media (max-width: 768px) {
-            /* تعديل الهيدر والأزرار العلوية */
             header {
                 padding: 10px 4%;
             }
@@ -596,7 +595,6 @@
                 gap: 12px;
             }
 
-            /* تصغير الترويسة */
             .category-header {
                 padding: 20px 5%;
                 margin-bottom: 20px;
@@ -615,7 +613,6 @@
                 font-size: 14px;
             }
 
-            /* التعديل الجذري: كرتين في السطر وتصغير الحجم */
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
@@ -650,7 +647,6 @@
                 font-size: 12px;
             }
 
-            /* التعديل الجذري: نافذة السلة تظهر في 65% فقط من الشاشة */
             .cart-drawer {
                 width: 65%;
                 left: -65%;
@@ -667,7 +663,6 @@
                 left: auto;
             }
 
-            /* تصغير محتويات السلة */
             .cart-drawer-header {
                 padding: 15px;
             }
@@ -695,8 +690,7 @@
                 padding: 10px;
             }
         }
-
-        /* للهواتف الصغيرة جداً لضمان عدم تداخل النصوص */
+        
         @media (max-width: 380px) {
             .product-image {
                 height: 110px;
@@ -765,7 +759,7 @@
 
     <section class="category-header">
         <h1 id="catHeaderTitle">قسم تزيين العربات</h1>
-        <p id="catHeaderDesc">لمسات فنية وإكسسوارات مميزة تجعل سيارتك تتألق بأعلى جودة واحترافية.</p>
+        <p id="catHeaderDesc">لمسات فنية وإكسسوارات مميزة تجعل سيارتك تتألق بأعلى جودة وااحترافية.</p>
     </section>
 
     <div class="controls">
@@ -777,10 +771,24 @@
 
     <div class="products-grid" id="productsGrid"></div>
 
-    <script>
-        // ==========================================================
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDn3EPBVKjQEX_ZRPiKxW1ZmVN80PKXUSI",
+            authDomain: "albayan-library.firebaseapp.com",
+            projectId: "albayan-library",
+            storageBucket: "albayan-library.firebasestorage.app",
+            messagingSenderId: "318412584830",
+            appId: "1:318412584830:web:45d6fca35a00040fd5252f",
+            measurementId: "G-4P3SHQ9ZZ3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // 📦 المخزن المركزي لمنتجات قسم زينة السيارات (يدعم اللغتين)
-        // ==========================================================
         const carDecoProductsDatabase = [
             {
                 "nameAr": "ملصقات وتصاميم فينيل مخصصة",
@@ -893,10 +901,8 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // 🌐 4. الترجمة الفورية
-        const langToggleBtn = document.getElementById('langToggleBtn');
-        
-        function applyLanguage(lang) {
+        // 🌐 4. الترجمة الفورية وإسقاط نطاق الدالة على الـ window
+        window.applyLanguage = function(lang) {
             currentLang = lang;
             localStorage.setItem('albayan_lang', lang);
             
@@ -919,17 +925,17 @@
             document.getElementById('catHeaderDesc').innerText = dict.catHeaderDesc;
             document.getElementById('searchInput').placeholder = dict.searchPlaceholder;
 
-            loadProducts();
+            window.loadProducts();
             updateCartUI();
         }
 
         langToggleBtn.addEventListener('click', () => {
             let targetLang = currentLang === 'ar' ? 'en' : 'ar';
-            applyLanguage(targetLang);
+            window.applyLanguage(targetLang);
         });
 
-        // توليد المنتجات
-        function loadProducts() {
+        // توليد المنتجات الثابتة المكتوبة مسبقاً
+        window.loadProducts = function() {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = ''; 
             const dict = localizationDict[currentLang];
@@ -993,8 +999,7 @@
             cartTotalAmount.innerText = `${totalMoney.toLocaleString()} ${dict.currency}`;
         }
 
-        // تم التعديل هنا ليتوافق مع فاتورة cart.html والواتساب (إضافة المتغير name)
-        function addToCart(nameAr, nameEn, price, img) {
+        window.addToCart = function(nameAr, nameEn, price, img) {
             let existingItem = cart.find(item => item.nameAr === nameAr || item.name === nameAr);
             if(existingItem) {
                 existingItem.qty += 1;
@@ -1008,7 +1013,7 @@
             cartOverlay.classList.add('show');
         }
 
-        function changeQty(index, amount) {
+        window.changeQty = function(index, amount) {
             cart[index].qty += amount;
             if(cart[index].qty <= 0) {
                 cart.splice(index, 1);
@@ -1030,23 +1035,7 @@
             cartOverlay.classList.remove('show');
         });
 
-        // البحث الذكي
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('keyup', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const productCards = document.querySelectorAll('.product-card');
-            
-            productCards.forEach(card => {
-                const productName = card.getAttribute('data-name').toLowerCase();
-                if (productName.includes(searchTerm)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-
-        function sendOrderViaWhatsApp() {
+        window.sendOrderViaWhatsApp = function() {
             if(cart.length === 0) {
                 alert(currentLang === 'ar' ? 'السلة فارغة، أضف بعض المنتجات أولاً!' : 'The cart is empty, add some products first!');
                 return;
@@ -1054,8 +1043,68 @@
             window.location.href = 'cart.html';
         }
 
+        // -------------------------------------------------------------------------
+        // 🔥 الكود السحري لجلب المنتجات من الفايربيس (قسم تزيين العربات) طوالي وعرضها بربط لحظي 🔥
+        // -------------------------------------------------------------------------
+        const productsGrid = document.getElementById('productsGrid');
+        const originalHardcodedProducts = productsGrid.innerHTML;
+
+        // إنشاء استعلام مرن يجلب المنتجات التابعة لـ (قسم تزيين العربات) فقط
+        const q = query(collection(db, "Products"), where("category", "==", "قسم تزيين العربات"));
+
+        onSnapshot(q, (snapshot) => {
+            // إعادة بناء المنتجات الثابتة المكتوبة في المصفوفة أولاً لحمايتها التامة من الحذف طبقاً للقاعدة الذهبية
+            window.loadProducts();
+
+            snapshot.forEach((doc) => {
+                const product = doc.data();
+                const nameToDisplay = currentLang === 'ar' ? (product.nameAr || product.name) : (product.nameEn || product.name);
+
+                // بناء كرت العرض ليتوافق مع التصميم العام تماماً
+                const cardHTML = `
+                    <div class="product-card" data-name="${nameToDisplay}">
+                        <div class="product-image">
+                            <img src="${product.img}" alt="${nameToDisplay}" onerror="this.src='https://images.unsplash.com/photo-1594322436404-5a0526db4d13?w=500'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${nameToDisplay}</h3>
+                            <div class="product-price">${Number(product.price).toLocaleString()} ج.س</div>
+                            <button class="add-to-cart-btn" onclick="addToCart('${product.nameAr || product.name}', '${product.nameEn || ""}', ${product.price}, '${product.img}')">
+                                ${localizationDict[currentLang].addToCartBtn}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                // الإضافة الفورية المباشرة أسفل الكروت القديمة الثابتة
+                productsGrid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            // تحديث محرك البحث الفوري ليتعرف على كروت قاعدة البيانات الجديدة
+            attachSearchEvent();
+        });
+
+        function attachSearchEvent() {
+            const searchInput = document.getElementById('searchInput');
+            const newSearchInput = searchInput.cloneNode(true);
+            searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+            newSearchInput.addEventListener('keyup', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const currentCards = document.querySelectorAll('.product-card');
+                
+                currentCards.forEach(card => {
+                    const productName = card.getAttribute('data-name').toLowerCase();
+                    if (productName.includes(searchTerm)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
         window.onload = function() {
-            applyLanguage(currentLang);
+            window.applyLanguage(currentLang);
         };
     </script>
 </body>
